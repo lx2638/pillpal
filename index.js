@@ -42,4 +42,27 @@ function markTaken(index) {
   meds[index].taken = true;
   renderList();
 }
+function checkTimes() {
+  const now = new Date();
+  meds.forEach(med => {
+    const medTime = new Date();
+    const [hours, minutes] = med.time.split(':');
+    medTime.setHours(hours, minutes);
+    if (now > medTime && !med.taken) {
+      // Mark as overdue or alert
+    }
+  });
+}
+function saveMeds() {
+  localStorage.setItem('meds', JSON.stringify(meds));
+}
+function loadMeds() {
+  const data = localStorage.getItem('meds');
+  if (data) {
+    meds.push(...JSON.parse(data));
+    renderList();
+  }
+}
+
+
 
