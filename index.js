@@ -26,11 +26,9 @@ form.addEventListener("submit", function (e) {
 function addToList(med) {
   const li = document.createElement("li");
   li.innerHTML = `<strong>${med.name}</strong> — ${med.dosage} at <em>${med.time}</em>`;
-
   li.setAttribute("data-time", med.time);
-
   medList.appendChild(li);
-  med.liElement = li; // save reference for updates
+  med.liElement = li;
 }
 
 function scheduleAlert(med) {
@@ -49,19 +47,16 @@ function scheduleAlert(med) {
       notifyUser(med);
     }, timeUntil);
   } else {
-    // If it's already past, trigger immediately
-    notifyUser(med);
+    notifyUser(med); // If the time already passed, trigger alert immediately
   }
 }
 
 function notifyUser(med) {
-  // Visual alert
   if (!med.taken && med.liElement) {
     med.liElement.classList.add("alert");
     med.liElement.innerHTML += " — ⚠️ Missed or not taken!";
   }
 
-  // Browser notification
   if ("Notification" in window) {
     if (Notification.permission === "granted") {
       new Notification("Medication Alert", {
