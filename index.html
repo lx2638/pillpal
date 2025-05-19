@@ -1,51 +1,26 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8" />
-    <title>PillPal:Your Pal in Medicine</title>
-    <link rel="icon" type="image/x-icon" href="/images/favicon.ico">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medication Tracker</title>
+  <link rel="stylesheet" href="styles.css" />
 </head>
-<style>
-  body{
-    background-color: rgb(212, 241, 244);
-  }
-  h1{
-        font-family:Verdana, Geneva, Tahoma, sans-serif;
-        color: rgb(35, 35, 181);
-
-  }
-  p{
-    color:mediumblue
-  }
-h2{
-  color:mediumblue
-}
-</style>
 <body>
-<h1> PillPal</h1> 
-<div class="header">
-  <center><h1>PillPal</h1>
-  <p>Welcome to PillPal!
-    Whether you're managing your own health, caring <br>for a loved one, or supporting a hospice patient, keeping track of medications can be challenging. <br>Our Medication Tracker is designed to help you stay organized,<br> informed, and confident in your caregiving journey.
-  </p></center>
-  
-</div>
+  <div class="container">
+    <h1>Medication Tracker</h1>
+    <form id="medForm">
+      <input type="text" id="medName" placeholder="Medication Name" required />
+      <input type="text" id="dosage" placeholder="Dosage (e.g., 500mg)" required />
+      <input type="time" id="medTime" required />
+      <button type="submit">Add Medication</button>
+    </form>
 
-<body>
-  <center>
-  <h1>Medication Tracker</h1>
-  
-  <form id="medForm">
-    <input type="text" placeholder="Medicine name" />
-    <input type="text" placeholder="Dosage" />
-    <input type="time" />
-    <button type="submit">Add Medication</button>
-  </form>
+    <h2>Today's Medications</h2>
+    <ul id="medList"></ul>
+  </div>
 
-  <h2>Today's Medications</h2>
-  <ul id="medList"></ul>
-  </center>
-</body>
-
+  <script src="script.js"></script>
 </body>
 </html>
+
