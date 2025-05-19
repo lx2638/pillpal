@@ -1,58 +1,80 @@
-// script.js
-const medForm = document.getElementById("medForm");
+const form = document.getElementById("medForm");
 const medList = document.getElementById("medList");
-const meds = [];
+let meds = [];
 
-medForm.addEventListener("submit", function (e) {
+form.addEventListener("submit", function (e) {
   e.preventDefault();
 
-  const name = document.getElementById("medName").value;
-  const dosage = document.getElementById("medDosage").value;
+  const name = document.getElementById("medName").value.trim();
+  const dosage = document.getElementById("dosage").value.trim();
   const time = document.getElementById("medTime").value;
 
-  const med = { name, dosage, time, taken: false };
-  meds.push(med);
-  renderList();
-  scheduleNotification(med);
-
-  medForm.reset();
+  if (name && dosage && time) {
+    const medItem = {
+      name,
+      dosage,
+      time,
+      taken: false
+    };
+    meds.push(medItem);
+    addToList(medItem);
+    scheduleAlert(medItem);
+    form.reset();
+  }
 });
 
-function renderList() {
-  medList.innerHTML = "";
-  const now = new Date();
-  meds.forEach(med => {
-    const li = document.createElement("li");
-    li.className = "medItem";
+function addToList(med) {
+  const li = document.createElement("li");
+  li.innerHTML = `<strong>${med.name}</strong> — ${med.dosage} at <em>${med.time}</em>`;
 
-    const currentTime = new Date();
-    const medTime = new Date();
-    const [hours, minutes] = med.time.split(":");
-    medTime.setHours(hours, minutes, 0, 0);
+  li.setAttribute("data-time", med.time);
 
-    if (!med.taken && currentTime > medTime) {
-      li.classList.add("alert");
-    }
-
-    li.textContent = `${med.name} - ${med.dosage} at ${med.time}`;
-    medList.appendChild(li);
-  });
+  medList.appendChild(li);
+  med.liElement = li; // save reference for updates
 }
 
-function scheduleNotification(med) {
+function scheduleAlert(med) {
   const now = new Date();
+  const [hour, minute] = med.time.split(":").map(Number);
   const medTime = new Date();
-  const [hours, minutes] = med.time.split(":");
-  medTime.setHours(hours, minutes, 0, 0);
 
-  const delay = medTime.getTime() - now.getTime();
-  if (delay > 0) {
+  medTime.setHours(hour);
+  medTime.setMinutes(minute);
+  medTime.setSeconds(0);
+
+  const timeUntil = medTime - now;
+
+  if (timeUntil > 0) {
     setTimeout(() => {
-      alert(`Time to take your medicine: ${med.name} (${med.dosage})`);
-      med.taken = true;
-      renderList();
-    }, delay);
+      notifyUser(med);
+    }, timeUntil);
+  } else {
+    // If it's already past, trigger immediately
+    notifyUser(med);
   }
 }
 
+function notifyUser(med) {
+  // Visual alert
+  if (!med.taken && med.liElement) {
+    med.liElement.classList.add("alert");
+    med.liElement.innerHTML += " — ⚠️ Missed or not taken!";
+  }
 
+  // Browser notification
+  if ("Notification" in window) {
+    if (Notification.permission === "granted") {
+      new Notification("Medication Alert", {
+        body: `Time to take ${med.name} (${med.dosage})`,
+      });
+    } else if (Notification.permission !== "denied") {
+      Notification.requestPermission().then(permission => {
+        if (permission === "granted") {
+          new Notification("Medication Alert", {
+            body: `Time to take ${med.name} (${med.dosage})`,
+          });
+        }
+      });
+    }
+  }
+}
