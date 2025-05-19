@@ -1,10 +1,65 @@
 body {
-  font-family: Arial;
-  padding: 20px;
-  background: #f7f7f7;
-}
-input, button {
-  margin: 5px;
-  padding: 8px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 0;
 }
 
+.container {
+  max-width: 500px;
+  margin: 30px auto;
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+}
+
+h1, h2 {
+  text-align: center;
+  color: #333;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input, button {
+  padding: 10px;
+  font-size: 1em;
+}
+
+button {
+  background-color: #2c7be5;
+  color: white;
+  border: none;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+button:hover {
+  background-color: #1a5ec3;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+}
+
+li {
+  padding: 12px;
+  margin: 8px 0;
+  background-color: #e0f7fa;
+  border-left: 5px solid #2c7be5;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+li.alert {
+  background-color: #ffebee;
+  border-left: 5px solid #e53935;
+  color: #b71c1c;
+}
