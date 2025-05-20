@@ -368,56 +368,7 @@
             </div>
         </div>
 
-        <!-- Notes Section -->
-        <div id="notes-section" class="section">
-            <h2>Medication Notes</h2>
-            <div class="form-container">
-                <div class="form-group">
-                    <label for="note-text">Add a Note</label>
-                    <textarea id="note-text" rows="4" placeholder="Enter any notes about medications, side effects, or observations..."></textarea>
-                </div>
-                <button id="add-note">Save Note</button>
-            </div>
-
-            <div class="notes-container">
-                <h3>Recent Notes</h3>
-                <div id="notes-list">
-                    <!-- Notes will be added here dynamically -->
-                </div>
-            </div>
-        </div>
-
-        <!-- Daily Schedule Section -->
-        <div id="daily-schedule-section" class="section">
-            <h2>Daily Medication Schedule</h2>
-            <table class="schedule-table">
-                <thead>
-                    <tr>
-                        <th>Time</th>
-                        <th>Medication</th>
-                        <th>Status</th>
-                    </tr>
-                </thead>
-                <tbody id="daily-schedule-body">
-                    <!-- Daily schedule will be populated here -->
-                </tbody>
-            </table>
-        </div>
-
-        <!-- Weekly Schedule Section -->
-        <div id="weekly-schedule-section" class="section">
-            <h2>Weekly Medication Overview</h2>
-            <div class="weekly-schedule" id="weekly-schedule-grid">
-                <!-- Weekly schedule will be populated here -->
-            </div>
-        </div>
         
-        <!-- Notification Area -->
-        <div id="notification" class="notification-area">
-            <!-- Notifications will be shown here -->
-        </div>
-    </div>
-
     <script>
         // Medication Tracker Application
         document.addEventListener('DOMContentLoaded', () => {
@@ -433,15 +384,7 @@
             const medicationList = document.getElementById('medication-list');
             const notificationArea = document.getElementById('notification');
             
-            // DOM Elements for notes
-            const noteTextInput = document.getElementById('note-text');
-            const addNoteButton = document.getElementById('add-note');
-            const notesList = document.getElementById('notes-list');
-
-            // DOM Elements for schedules
-            const dailyScheduleBody = document.getElementById('daily-schedule-body');
-            const weeklyScheduleGrid = document.getElementById('weekly-schedule-grid');
-            
+           
             // Data storage arrays
             let medications = [];
             let notes = [];
