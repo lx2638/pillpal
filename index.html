@@ -27,6 +27,30 @@
            color: #2f14c8;
            margin-bottom: 30px;
        }
+       /* Navigation Bar Styling */
+       .nav-container {
+           max-width: 800px;
+           margin: 0 auto 20px auto;
+           background-color: #2f14c8;
+           border-radius: 10px;
+           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+       }
+       .navbar {
+           display: flex;
+           justify-content: space-around;
+           padding: 15px 0;
+       }
+       .nav-item {
+           color: white;
+           text-decoration: none;
+           font-weight: 600;
+           padding: 8px 15px;
+           border-radius: 5px;
+           transition: background-color 0.3s;
+       }
+       .nav-item:hover, .nav-item.active {
+           background-color: rgba(255, 255, 255, 0.2);
+       }
        /* Form Styling */
        .form-container {
            margin-bottom: 30px;
@@ -42,7 +66,7 @@
            font-weight: 600;
            color: #2c3e50;
        }
-       input, select, textarea {
+       input {
            width: 100%;
            padding: 10px;
            border: 1px solid #ddd;
@@ -155,10 +179,34 @@
            .med-status {
                margin-top: 10px;
            }
+           .navbar {
+               flex-direction: column;
+               gap: 10px;
+           }
+           .nav-item {
+               display: block;
+               text-align: center;
+           }
        }
    </style>
 </head>
 <body>
+   <h1>PillPal: Your Pal in Health</h1>
+   <center>
+       <h2>Pill Pal</h2>
+       <p>Whether you're managing your own health,<br> caring for a loved one, or supporting a hospice patient,<br> keeping track of medications can be challenging. <br>Our Medication Tracker is designed to help you stay<br> organized, informed, and confident<br> in your caregiving journey.</p>
+   </center>
+   <!-- Navigation Bar -->
+   <div class="nav-container">
+       <nav class="navbar">
+           <a href="#medications" class="nav-item active" data-section="medications-section">Medications</a>
+           <!--
+           <a href="#notes" class="nav-item" data-section="notes-section">Notes</a>
+           <a href="#daily-schedule" class="nav-item" data-section="daily-schedule-section">Daily Schedule</a>
+           <a href="#weekly-schedule" class="nav-item" data-section="weekly-schedule-section">Weekly Schedule</a>
+           -->
+       </nav>
+   </div>
    <div class="container">
        <h1>Medication Tracker</h1>
        <!-- Medications Section -->
@@ -187,6 +235,17 @@
                </ul>
            </div>
        </div>
+       <!--
+       <div id="notes-section" class="section">
+           ... (Notes Section commented out)
+       </div>
+       <div id="daily-schedule-section" class="section">
+           ... (Daily Schedule commented out)
+       </div>
+       <div id="weekly-schedule-section" class="section">
+           ... (Weekly Schedule commented out)
+       </div>
+       -->
        <!-- Notification Area -->
        <div id="notification" class="notification-area">
            <!-- Notifications will be shown here -->
@@ -195,6 +254,9 @@
    <script>
        // Medication Tracker Application
        document.addEventListener('DOMContentLoaded', () => {
+           // DOM Elements for navigation
+           const navItems = document.querySelectorAll('.nav-item');
+           const sections = document.querySelectorAll('.section');
            // DOM Elements for medications
            const medNameInput = document.getElementById('med-name');
            const medDosageInput = document.getElementById('med-dosage');
@@ -202,19 +264,26 @@
            const addMedButton = document.getElementById('add-medication');
            const medicationList = document.getElementById('medication-list');
            const notificationArea = document.getElementById('notification');
-
            // Data storage arrays
            let medications = [];
-
            // Check if there are saved medications in localStorage
            if (localStorage.getItem('medications')) {
                medications = JSON.parse(localStorage.getItem('medications'));
                renderMedicationList();
            }
-
+           // Navigation functionality (only Medications tab is active)
+           navItems.forEach(item => {
+               item.addEventListener('click', (e) => {
+                   e.preventDefault();
+                   navItems.forEach(i => i.classList.remove('active'));
+                   sections.forEach(s => s.classList.remove('active'));
+                   item.classList.add('active');
+                   const sectionId = item.getAttribute('data-section');
+                   document.getElementById(sectionId).classList.add('active');
+               });
+           });
            // Event listener for add medication button
            addMedButton.addEventListener('click', addMedication);
-
            // Function to add a new medication
            function addMedication() {
                // Validate inputs
@@ -245,7 +314,6 @@
                // Show confirmation
                showNotification(`${newMed.name} added successfully!`, 'success');
            }
-
            // Function to render the medication list
            function renderMedicationList() {
                // Clear the current list
@@ -280,7 +348,6 @@
                    medicationList.innerHTML = '<p>No medications added yet.</p>';
                }
            }
-
            // Function to get the status label
            function getStatusLabel(med) {
                const now = new Date();
