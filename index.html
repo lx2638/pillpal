@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -149,6 +148,20 @@
            background-color: #ffebee;
            color: #e74c3c;
        }
+       /* Delete Button Styling */
+       .delete-btn {
+           background-color: #e74c3c;
+           color: white;
+           border: none;
+           border-radius: 5px;
+           padding: 5px 10px;
+           margin-left: 10px;
+           cursor: pointer;
+           font-weight: bold;
+       }
+       .delete-btn:hover {
+           background-color: #c0392b;
+       }
        /* Notification Area */
        .notification-area {
            margin-top: 30px;
@@ -193,26 +206,6 @@
        }
        .notes-text {
            font-size: 15px;
-       }
-       @media (max-width: 600px) {
-           .container {
-               padding: 15px;
-           }
-           .medication-item {
-               flex-direction: column;
-               align-items: flex-start;
-           }
-           .med-status {
-               margin-top: 10px;
-           }
-           .navbar {
-               flex-direction: column;
-               gap: 10px;
-           }
-           .nav-item {
-               display: block;
-               text-align: center;
-           }
        }
    </style>
 </head>
@@ -341,19 +334,45 @@
                            ${med.dosage} · ${formatTime(med.time)}
                        </div>
                    </div>
-                   <div class="med-status ${statusLabel.class}">${statusLabel.text}</div>
+                   <div>
+                       <span class="med-status ${statusLabel.class}">${statusLabel.text}</span>
+                       <button class="delete-btn">Delete</button>
+                   </div>
                `;
 
                medicationList.appendChild(li);
 
-               // Mark as taken on click
-               li.addEventListener('click', () => {
-                   markAsTaken(med.id);
+               // Mark as taken on click (except when clicking delete button)
+               li.addEventListener('click', (e) => {
+                   if (!e.target.classList.contains('delete-btn')) {
+                       markAsTaken(med.id);
+                   }
+               });
+
+               // Delete button functionality
+               const deleteBtn = li.querySelector('.delete-btn');
+               deleteBtn.addEventListener('click', (e) => {
+                   e.stopPropagation(); // Prevent triggering the li click event
+                   deleteMedication(med.id);
                });
            });
 
            if (medications.length === 0) {
                medicationList.innerHTML = '<p>No medications added yet.</p>';
+           }
+       }
+
+       // Add this new function for deleting medications
+       function deleteMedication(id) {
+           if (confirm('Are you sure you want to delete this medication?')) {
+               const medIndex = medications.findIndex(med => med.id === parseInt(id));
+               if (medIndex !== -1) {
+                   const deletedMed = medications[medIndex];
+                   medications.splice(medIndex, 1);
+                   saveMedications();
+                   renderMedicationList();
+                   showNotification(`${deletedMed.name} deleted successfully!`, 'success');
+               }
            }
        }
 
