@@ -1,494 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-   <meta charset="UTF-8">
-   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-   <title>Medication Tracker</title>
-   <style>
-       /* General Styling */
-       body {
-           font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-           margin: 0;
-           padding: 20px;
-           background-color: #9cd9fc;
-           color: #333;
-           line-height: 1.6;
-       }
-       .container {
-           max-width: 800px;
-           margin: 0 auto;
-           background-color: #fff;
-           padding: 30px;
-           border-radius: 10px;
-           box-shadow: 0 4px 12px rgba(159, 207, 231, 0.1);
-       }
-       h1 {
-           text-align: center;
-           color: #2f14c8;
-           margin-bottom: 30px;
-       }
-       /* Navigation Bar Styling */
-       .nav-container {
-           max-width: 800px;
-           margin: 0 auto 20px auto;
-           background-color: #2f14c8;
-           border-radius: 10px;
-           box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-       }
-       .navbar {
-           display: flex;
-           justify-content: space-around;
-           padding: 15px 0;
-       }
-       .nav-item {
-           color: white;
-           text-decoration: none;
-           font-weight: 600;
-           padding: 8px 15px;
-           border-radius: 5px;
-           transition: background-color 0.3s;
-       }
-       .nav-item:hover, .nav-item.active {
-           background-color: rgba(255, 255, 255, 0.2);
-       }
-       /* Form Styling */
-       .form-container {
-           margin-bottom: 30px;
-           border-bottom: 1px solid #eee;
-           padding-bottom: 20px;
-       }
-       .form-group {
-           margin-bottom: 15px;
-       }
-       label {
-           display: block;
-           margin-bottom: 5px;
-           font-weight: 600;
-           color: #2c3e50;
-       }
-       input {
-           width: 100%;
-           padding: 10px;
-           border: 1px solid #ddd;
-           border-radius: 5px;
-           font-size: 16px;
-       }
-       button {
-           background-color: #3498db;
-           color: white;
-           border: none;
-           padding: 12px 25px;
-           border-radius: 5px;
-           cursor: pointer;
-           font-size: 16px;
-           font-weight: 600;
-           transition: background-color 0.3s;
-           display: block;
-           margin: 20px auto 0;
-       }
-       button:hover {
-           background-color: #3599dc;
-       }
-       /* Medication List Styling */
-       .medications-container {
-           margin-top: 30px;
-       }
-       h2 {
-           color: #2c3e50;
-           border-bottom: 2px solid #2f14c8;
-           padding-bottom: 10px;
-           margin-bottom: 20px;
-       }
-       .medication-list {
-           list-style: none;
-           padding: 0;
-       }
-       .medication-item {
-           background-color: #f9f9f9;
-           border-left: 4px solid #3498db;
-           padding: 15px;
-           margin-bottom: 15px;
-           border-radius: 5px;
-           display: flex;
-           justify-content: space-between;
-           align-items: center;
-           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
-       }
-       .med-info {
-           flex-grow: 1;
-       }
-       .med-name {
-           font-weight: 700;
-           font-size: 18px;
-           margin-bottom: 5px;
-       }
-       .med-details {
-           color: #666;
-           font-size: 14px;
-       }
-       .med-status {
-           padding: 5px 10px;
-           border-radius: 15px;
-           font-weight: 600;
-           font-size: 12px;
-           text-transform: uppercase;
-       }
-       .on-time {
-           background-color: #e6f7e9;
-           color: #2ecc71;
-       }
-       .due {
-           background-color: #fff5e6;
-           color: #f29a24;
-       }
-       .overdue {
-           background-color: #ffebee;
-           color: #e74c3c;
-       }
-       /* Notification Area */
-       .notification-area {
-           margin-top: 30px;
-           padding: 15px;
-           border-radius: 5px;
-           display: none;
-       }
-       .notification-area.show {
-           display: block;
-       }
-       .notification-success {
-           background-color: #e6f7e9;
-           border-left: 4px solid #2ecc71;
-       }
-       .notification-warning {
-           background-color: #fff5e6;
-           border-left: 4px solid #f29a24;
-       }
-       .notification-danger {
-           background-color: #ffebee;
-           border-left: 4px solid #e74c3c;
-       }
-       /* Responsive Design */
-       @media (max-width: 600px) {
-           .container {
-               padding: 15px;
-           }
-           .medication-item {
-               flex-direction: column;
-               align-items: flex-start;
-           }
-           .med-status {
-               margin-top: 10px;
-           }
-           .navbar {
-               flex-direction: column;
-               gap: 10px;
-           }
-           .nav-item {
-               display: block;
-               text-align: center;
-           }
-       }
-   </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Medication Tracker</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      background-color: #f4f4f4;
+      color: #333;
+    }
+
+    h1, h2 {
+      text-align: center;
+      color: #4CAF50;
+    }
+
+    .nav-container {
+      background-color: #4CAF50;
+    }
+
+    .navbar {
+      display: flex;
+      justify-content: center;
+      padding: 1em 0;
+    }
+
+    .nav-item {
+      margin: 0 1em;
+      text-decoration: none;
+      color: white;
+      font-weight: bold;
+      padding-bottom: 0.2em;
+      border-bottom: 2px solid transparent;
+      transition: border-color 0.3s;
+    }
+
+    .nav-item:hover,
+    .nav-item.active {
+      border-color: white;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: auto;
+      padding: 2em;
+    }
+
+    .form-container,
+    .medications-container {
+      background-color: white;
+      padding: 2em;
+      border-radius: 5px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      margin-bottom: 2em;
+    }
+
+    .form-group {
+      margin-bottom: 1.5em;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 0.5em;
+      font-weight: bold;
+    }
+
+    .form-group input[type="text"],
+    .form-group input[type="time"] {
+      width: 100%;
+      padding: 0.8em;
+      box-sizing: border-box;
+      border-radius: 4px;
+      border: 1px solid #ccc;
+    }
+
+    .form-group input[type="checkbox"] {
+      margin-right: 0.5em;
+    }
+
+    button {
+      background-color: #4CAF50;
+      color: white;
+      padding: 0.8em 1.5em;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+
+    button:hover {
+      background-color: #45a049;
+    }
+
+    .delete-btn {
+      background-color: #e53935;
+      margin-top: 1em;
+    }
+
+    .delete-btn:hover {
+      background-color: #c62828;
+    }
+
+    .medication-list {
+      list-style-type: none;
+      padding: 0;
+    }
+
+    .medication-item {
+      background-color: #f9f9f9;
+      margin-bottom: 1em;
+      padding: 1em;
+      border-radius: 5px;
+      box-shadow: 0 0 5px rgba(0,0,0,0.05);
+    }
+
+    .med-info {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .med-name {
+      font-weight: bold;
+      font-size: 1.1em;
+    }
+
+    .med-details {
+      color: #555;
+    }
+
+    .section {
+      display: none;
+    }
+
+    .section.active {
+      display: block;
+    }
+
+    .notification-area {
+      margin-top: 1em;
+      color: red;
+      font-weight: bold;
+      text-align: center;
+    }
+  </style>
 </head>
 <body>
-   <h1>PillPal: Your Pal in Health</h1>
-   <center>
-       <p>Whether you're managing your own health,<br> caring for a loved one, or supporting a hospice patient,<br> keeping track of medications can be challenging. <br>Our Medication Tracker is designed to help you stay<br> organized, informed, and confident<br> in your caregiving journey.</p>
-   </center>
-   <!-- Navigation Bar -->
-   <div class="nav-container">
-       <nav class="navbar">
-           <a href="#medications" class="nav-item active" data-section="medications-section">Medications</a>
-           <!--
-           <a href="#notes" class="nav-item" data-section="notes-section">Notes</a>
-           <a href="#daily-schedule" class="nav-item" data-section="daily-schedule-section">Daily Schedule</a>
-           <a href="#weekly-schedule" class="nav-item" data-section="weekly-schedule-section">Weekly Schedule</a>
-           -->
-       </nav>
-   </div>
-   <div class="container">
-       <h1>Medication Tracker</h1>
-       <!-- Medications Section -->
-       <div id="medications-section" class="section active">
-           <!-- Medication Form -->
-           <div class="form-container">
-               <div class="form-group">
-                   <label for="med-name">Medication Name</label>
-                   <input type="text" id="med-name" placeholder="Enter medication name" required>
-               </div>
-               <div class="form-group">
-                   <label for="med-dosage">Dosage</label>
-                   <input type="text" id="med-dosage" placeholder="E.g., 200mg" required>
-               </div>
-               <div class="form-group">
-                   <label for="med-time">Time to Take</label>
-                   <input type="time" id="med-time" required>
-               </div>
-               <button id="add-medication">Add Medication</button>
-           </div>
-           <!-- Today's Medications -->
-           <div class="medications-container">
-               <h2>Today's Medications</h2>
-               <ul id="medication-list" class="medication-list">
-                   <!-- Medications will be added here dynamically -->
-               </ul>
-           </div>
-       </div>
-       <!--
-       <div id="notes-section" class="section">
-           ... (Notes Section commented out)
-       </div>
-       <div id="daily-schedule-section" class="section">
-           ... (Daily Schedule commented out)
-       </div>
-       <div id="weekly-schedule-section" class="section">
-           ... (Weekly Schedule commented out)
-       </div>
-       -->
-       <!-- Notification Area -->
-       <div id="notification" class="notification-area">
-           <!-- Notifications will be shown here -->
-       </div>
-   </div>
-   <script>
-       // Medication Tracker Application
-       document.addEventListener('DOMContentLoaded', () => {
-           // DOM Elements for navigation
-           const navItems = document.querySelectorAll('.nav-item');
-           const sections = document.querySelectorAll('.section');
-           // DOM Elements for medications
-           const medNameInput = document.getElementById('med-name');
-           const medDosageInput = document.getElementById('med-dosage');
-           const medTimeInput = document.getElementById('med-time');
-           const addMedButton = document.getElementById('add-medication');
-           const medicationList = document.getElementById('medication-list');
-           const notificationArea = document.getElementById('notification');
-           // Data storage arrays
-           let medications = [];
-           // Check if there are saved medications in localStorage
-           if (localStorage.getItem('medications')) {
-               medications = JSON.parse(localStorage.getItem('medications'));
-               renderMedicationList();
-           }
-           // Navigation functionality (only Medications tab is active)
-           navItems.forEach(item => {
-               item.addEventListener('click', (e) => {
-                   e.preventDefault();
-                   navItems.forEach(i => i.classList.remove('active'));
-                   sections.forEach(s => s.classList.remove('active'));
-                   item.classList.add('active');
-                   const sectionId = item.getAttribute('data-section');
-                   document.getElementById(sectionId).classList.add('active');
-               });
-           });
-           // Event listener for add medication button
-           addMedButton.addEventListener('click', addMedication);
-           // Function to add a new medication
-           function addMedication() {
-               // Validate inputs
-               if (!medNameInput.value || !medDosageInput.value || !medTimeInput.value) {
-                   showNotification('Please fill in all fields', 'danger');
-                   return;
-               }
-               // Create new medication object
-               const newMed = {
-                   id: Date.now(), // Unique ID based on timestamp
-                   name: medNameInput.value,
-                   dosage: medDosageInput.value,
-                   time: medTimeInput.value,
-                   status: 'pending', // pending, taken, missed
-                   timeInMs: convertTimeToMs(medTimeInput.value),
-                   notified: false
-               };
-               // Add to medications array
-               medications.push(newMed);
-               // Save to localStorage
-               saveMedications();
-               // Clear form
-               medNameInput.value = '';
-               medDosageInput.value = '';
-               medTimeInput.value = '';
-               // Update the UI
-               renderMedicationList();
-               // Show confirmation
-               showNotification(`${newMed.name} added successfully!`, 'success');
-           }
-           // Function to render the medication list
-           function renderMedicationList() {
-               // Clear the current list
-               medicationList.innerHTML = '';
-               // Sort medications by time
-               medications.sort((a, b) => a.timeInMs - b.timeInMs);
-               // Render each medication
-               medications.forEach(med => {
-                   const li = document.createElement('li');
-                   li.className = 'medication-item';
-                   li.dataset.id = med.id;
-                   // Update status based on current time
-                   const statusLabel = getStatusLabel(med);
-                   li.innerHTML = `
-                       <div class="med-info">
-                           <div class="med-name">${med.name}</div>
-                           <div class="med-details">
-                               ${med.dosage} · ${formatTime(med.time)}
-                           </div>
-                       </div>
-                       <div class="med-status ${statusLabel.class}">${statusLabel.text}</div>
-                   `;
-                   // Add to the list
-                   medicationList.appendChild(li);
-                   // Add click event to mark as taken
-                   li.addEventListener('click', () => {
-                       markAsTaken(med.id);
-                   });
-               });
-               // If no medications, show a message
-               if (medications.length === 0) {
-                   medicationList.innerHTML = '<p>No medications added yet.</p>';
-               }
-           }
-           // Function to get the status label
-           function getStatusLabel(med) {
-               const now = new Date();
-               const currentTime = now.getHours() * 60 + now.getMinutes();
-               const medTime = Math.floor(med.timeInMs / 60000);
-               if (med.status === 'taken') {
-                   return { class: 'on-time', text: 'TAKEN' };
-               } else if (currentTime < medTime) {
-                   const diff = medTime - currentTime;
-                   if (diff <= 30) { // Due within 30 minutes
-                       return { class: 'due', text: 'DUE SOON' };
-                   } else {
-                       return { class: 'on-time', text: 'PENDING' };
-                   }
-               } else {
-                   const diff = currentTime - medTime;
-                   if (diff > 30) { // Overdue by more than 30 minutes
-                       return { class: 'overdue', text: 'OVERDUE' };
-                   } else {
-                       return { class: 'due', text: 'DUE NOW' };
-                   }
-               }
-           }
-           // Function to mark medication as taken
-           function markAsTaken(id) {
-               const medIndex = medications.findIndex(med => med.id === parseInt(id));
-               if (medIndex !== -1) {
-                   medications[medIndex].status = 'taken';
-                   saveMedications();
-                   renderMedicationList();
-                   showNotification(`${medications[medIndex].name} marked as taken!`, 'success');
-               }
-           }
-           // Function to save medications to localStorage
-           function saveMedications() {
-               localStorage.setItem('medications', JSON.stringify(medications));
-           }
-           // Function to show notifications
-           function showNotification(message, type) {
-               notificationArea.textContent = message;
-               notificationArea.className = `notification-area notification-${type} show`;
-               // Hide notification after 5 seconds
-               setTimeout(() => {
-                   notificationArea.className = 'notification-area';
-               }, 5000);
-           }
-           // Helper function to convert time to milliseconds for easier comparison
-           function convertTimeToMs(timeString) {
-               const [hours, minutes] = timeString.split(':').map(Number);
-               const now = new Date();
-               const timeDate = new Date(now.getFullYear(), now.getMonth(), now.getDate(), hours, minutes);
-               return timeDate.getTime();
-           }
-           // Helper function to format time to 12-hour format
-           function formatTime(timeString) {
-               const [hours, minutes] = timeString.split(':').map(Number);
-               const period = hours >= 12 ? 'PM' : 'AM';
-               const formattedHours = hours % 12 || 12;
-               const formattedMinutes = minutes.toString().padStart(2, '0');
-               return `${formattedHours}:${formattedMinutes} ${period}`;
-           }
-           // Function to check for medication due times and show notifications
-           function checkMedicationTimes() {
-               const now = new Date();
-               const currentTime = now.getHours() * 60 + now.getMinutes();
-               medications.forEach(med => {
-                   if (med.status !== 'taken') {
-                       const medTime = Math.floor(med.timeInMs / 60000);
-                       // If it's time for medication and notification hasn't been shown
-                       if (currentTime === medTime && !med.notified) {
-                           // Show browser notification if supported
-                           if (Notification.permission === 'granted') {
-                               new Notification('Medication Reminder', {
-                                   body: `Time to take ${med.name} (${med.dosage})`,
-                                   icon: 'https://cdn-icons-png.flaticon.com/512/822/822143.png'
-                               });
-                           }
-                           // Show in-app notification
-                           showNotification(`Time to take ${med.name} (${med.dosage})`, 'warning');
-                           // Mark as notified to prevent duplicate notifications
-                           med.notified = true;
-                           saveMedications();
-                       }
-                       // If medication is overdue by 30 minutes and no overdue notification shown
-                       if (currentTime > medTime + 30 && !med.overdueNotified) {
-                           // Show browser notification if supported
-                           if (Notification.permission === 'granted') {
-                               new Notification('Medication Overdue', {
-                                   body: `You missed ${med.name} (${med.dosage})`,
-                                   icon: 'https://cdn-icons-png.flaticon.com/512/564/564619.png'
-                               });
-                           }
-                           // Show in-app notification
-                           showNotification(`You missed ${med.name} (${med.dosage})`, 'danger');
-                           // Mark as overdue notified
-                           med.overdueNotified = true;
-                           saveMedications();
-                       }
-                   }
-               });
-           }
-           // Check for medication times every minute
-           setInterval(checkMedicationTimes, 60000);
-           // Check medication status every 5 minutes and update UI
-           setInterval(() => {
-               renderMedicationList();
-           }, 300000);
-           // Initial check
-           checkMedicationTimes();
-           // Request notification permission
-           if (Notification.permission !== 'granted' && Notification.permission !== 'denied') {
-               // Show a notification to request permission
-               showNotification('Please allow notifications for medication reminders', 'warning');
-               // Add a button to request permission
-               const permissionBtn = document.createElement('button');
-               permissionBtn.textContent = 'Enable Notifications';
-               permissionBtn.style.marginTop = '10px';
-               notificationArea.appendChild(permissionBtn);
-               permissionBtn.addEventListener('click', () => {
-                   Notification.requestPermission();
-               });
-           }
-           // Reset medication notification flags at midnight
-           function resetNotificationFlags() {
-               const now = new Date();
-               const midnight = new Date(now.getFullYear(), now.getMonth(), now.getDate() + 1, 0, 0, 0);
-               const timeToMidnight = midnight - now;
-               setTimeout(() => {
-                   medications.forEach(med => {
-                       med.notified = false;
-                       med.overdueNotified = false;
-                       med.status = 'pending';
-                   });
-                   saveMedications();
-                   renderMedicationList();
-                   // Set up next midnight reset
-                   resetNotificationFlags();
-               }, timeToMidnight);
-           }
-           // Initialize midnight reset
-           resetNotificationFlags();
-       });
-   </script>
+  <h1>PillPal: Your Pal in Health</h1>
+  <center>
+    <p>Whether you're managing your own health,<br> caring for a loved one, or supporting a hospice patient,<br> keeping track of medications can be challenging. <br>Our Medication Tracker is designed to help you stay<br> organized, informed, and confident<br> in your caregiving journey.</p>
+  </center>
+
+  <div class="nav-container">
+    <nav class="navbar">
+      <a href="#medications" class="nav-item active" data-section="medications-section">Medications</a>
+      <a href="#weekly-schedule" class="nav-item" data-section="weekly-schedule-section">Weekly Schedule</a>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h1>Medication Tracker</h1>
+
+    <div id="medications-section" class="section active">
+      <div class="form-container">
+        <div class="form-group">
+          <label for="med-name">Medication Name</label>
+          <input type="text" id="med-name" placeholder="Enter medication name" />
+        </div>
+        <div class="form-group">
+          <label for="med-dosage">Dosage</label>
+          <input type="text" id="med-dosage" placeholder="E.g., 200mg" />
+        </div>
+        <div class="form-group">
+          <label for="med-time">Time to Take</label>
+          <input type="time" id="med-time" />
+        </div>
+        <div class="form-group">
+          <label>Days of the Week</label>
+          <div style="display: flex; flex-wrap: wrap; gap: 10px;">
+            <label><input type="checkbox" name="med-days" value="Sunday"> Sun</label>
+            <label><input type="checkbox" name="med-days" value="Monday"> Mon</label>
+            <label><input type="checkbox" name="med-days" value="Tuesday"> Tue</label>
+            <label><input type="checkbox" name="med-days" value="Wednesday"> Wed</label>
+            <label><input type="checkbox" name="med-days" value="Thursday"> Thu</label>
+            <label><input type="checkbox" name="med-days" value="Friday"> Fri</label>
+            <label><input type="checkbox" name="med-days" value="Saturday"> Sat</label>
+          </div>
+        </div>
+        <button id="add-medication">Add Medication</button>
+      </div>
+
+      <div class="medications-container">
+        <h2>Today's Medications</h2>
+        <ul id="medication-list" class="medication-list"></ul>
+      </div>
+    </div>
+
+    <div id="weekly-schedule-section" class="section">
+      <div class="medications-container">
+        <h2>Weekly Medication Schedule</h2>
+        <ul id="weekly-schedule-list" class="medication-list"></ul>
+      </div>
+    </div>
+
+    <div id="notification" class="notification-area"></div>
+  </div>
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      const navItems = document.querySelectorAll('.nav-item');
+      const sections = document.querySelectorAll('.section');
+      const medNameInput = document.getElementById('med-name');
+      const medDosageInput = document.getElementById('med-dosage');
+      const medTimeInput = document.getElementById('med-time');
+      const addMedButton = document.getElementById('add-medication');
+      const medicationList = document.getElementById('medication-list');
+      const weeklyScheduleList = document.getElementById('weekly-schedule-list');
+
+      let medications = JSON.parse(localStorage.getItem('medications')) || [];
+
+      function saveMedications() {
+        localStorage.setItem('medications', JSON.stringify(medications));
+      }
+
+      function renderMedicationList() {
+        medicationList.innerHTML = '';
+        const today = new Date().toLocaleDateString('en-US', { weekday: 'long' });
+        medications.forEach((med, index) => {
+          if (med.days.includes(today)) {
+            const li = document.createElement('li');
+            li.className = 'medication-item';
+            li.innerHTML = `
+              <div class="med-info">
+                <div class="med-name">${med.name}</div>
+                <div class="med-details">${med.dosage} at ${med.time}</div>
+                <div class="med-details">Days: ${med.days.join(', ')}</div>
+                <button class="delete-btn" data-index="${index}">Delete</button>
+              </div>
+            `;
+            medicationList.appendChild(li);
+          }
+        });
+      }
+
+      function renderWeeklySchedule() {
+        weeklyScheduleList.innerHTML = '';
+        const daysOfWeek = ['Sunday','Monday','Tuesday','Wednesday','Thursday','Friday','Saturday'];
+        daysOfWeek.forEach(day => {
+          const medsForDay = medications.filter(m => m.days.includes(day));
+          if (medsForDay.length > 0) {
+            const li = document.createElement('li');
+            li.className = 'medication-item';
+            li.innerHTML = `
+              <div class="med-info">
+                <div class="med-name">${day}</div>
+                ${medsForDay.map((med, i) => `
+                  <div class="med-details">${med.name} – ${med.dosage} at ${med.time}
+                  <button class="delete-btn" data-index="${medications.indexOf(med)}">Delete</button></div>
+                `).join('')}
+              </div>
+            `;
+            weeklyScheduleList.appendChild(li);
+          }
+        });
+      }
+
+      function renderAll() {
+        renderMedicationList();
+        renderWeeklySchedule();
+      }
+
+      addMedButton.addEventListener('click', () => {
+        const name = medNameInput.value.trim();
+        const dosage = medDosageInput.value.trim();
+        const time = medTimeInput.value;
+        const days = Array.from(document.querySelectorAll('input[name="med-days"]:checked')).map(cb => cb.value);
+
+        if (name && dosage && time && days.length > 0) {
+          medications.push({ name, dosage, time, days });
+          saveMedications();
+          renderAll();
+          medNameInput.value = '';
+          medDosageInput.value = '';
+          medTimeInput.value = '';
+          document.querySelectorAll('input[name="med-days"]').forEach(cb => cb.checked = false);
+        } else {
+          alert('Please fill all fields and select at least one day.');
+        }
+      });
+
+      document.body.addEventListener('click', e => {
+        if (e.target.classList.contains('delete-btn')) {
+          const index = e.target.getAttribute('data-index');
+          medications.splice(index, 1);
+          saveMedications();
+          renderAll();
+        }
+      });
+
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          navItems.forEach(i => i.classList.remove('active'));
+          sections.forEach(s => s.classList.remove('active'));
+          item.classList.add('active');
+          document.getElementById(item.getAttribute('data-section')).classList.add('active');
+        });
+      });
+
+      renderAll();
+    });
+  </script>
 </body>
 </html>
