@@ -76,6 +76,18 @@
            border-radius: 5px;
            font-size: 16px;
        }
+       .weekdays-group {
+           display: flex;
+           gap: 10px;
+           margin-bottom: 10px;
+       }
+       .weekday-checkbox {
+           display: flex;
+           align-items: center;
+       }
+       .weekday-checkbox input[type="checkbox"] {
+           margin-right: 4px;
+       }
        button {
            background-color: #3498db;
            color: white;
@@ -207,6 +219,28 @@
        .notes-text {
            font-size: 15px;
        }
+
+       /* Weekly Schedule Section */
+       #weekly-schedule-section {
+           margin-top: 20px;
+       }
+       .schedule-table {
+           width: 100%;
+           border-collapse: collapse;
+           margin-bottom: 20px;
+       }
+       .schedule-table th, .schedule-table td {
+           border: 1px solid #ddd;
+           padding: 10px;
+           text-align: center;
+       }
+       .schedule-table th {
+           background-color: #f0f6ff;
+           color: #2f14c8;
+       }
+       .schedule-table td {
+           background-color: #f9f9f9;
+       }
    </style>
 </head>
 <body>
@@ -219,6 +253,7 @@
        <nav class="navbar">
            <a href="#medications" class="nav-item active" data-section="medications-section">Medications</a>
            <a href="#notes" class="nav-item" data-section="notes-section">Notes</a>
+           <a href="#weekly-schedule" class="nav-item" data-section="weekly-schedule-section">Weekly Schedule</a>
        </nav>
    </div>
    <div class="container">
@@ -238,6 +273,18 @@
                <div class="form-group">
                    <label for="med-time">Time to Take</label>
                    <input type="time" id="med-time" required>
+               </div>
+               <div class="form-group">
+                   <label>Days of the Week</label>
+                   <div class="weekdays-group" id="weekdays-group">
+                       <label class="weekday-checkbox"><input type="checkbox" value="0">Sun</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="1">Mon</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="2">Tue</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="3">Wed</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="4">Thu</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="5">Fri</label>
+                       <label class="weekday-checkbox"><input type="checkbox" value="6">Sat</label>
+                   </div>
                </div>
                <button id="add-medication">Add Medication</button>
            </div>
@@ -266,6 +313,16 @@
                </div>
            </div>
        </div>
+       <!-- Weekly Schedule Section -->
+       <div id="weekly-schedule-section" class="section" style="display:none;">
+           <h1>Weekly Schedule</h1>
+           <div class="medications-container">
+               <h2>Medication Schedule by Day</h2>
+               <table class="schedule-table" id="schedule-table">
+                   <!-- Weekly schedule will be added here dynamically -->
+               </table>
+           </div>
+       </div>
        <!-- Notification Area -->
        <div id="notification" class="notification-area">
            <!-- Notifications will be shown here -->
@@ -288,6 +345,8 @@
        const noteTextInput = document.getElementById('note-text');
        const addNoteButton = document.getElementById('add-note');
        const notesList = document.getElementById('notes-list');
+       const weekdaysGroup = document.getElementById('weekdays-group');
+       const scheduleTable = document.getElementById('schedule-table');
 
        // --- Load data from localStorage if present ---
        if (localStorage.getItem('medications')) {
@@ -297,7 +356,7 @@
            notes = JSON.parse(localStorage.getItem('notes'));
        }
 
-       // --- Navigation Functionality for Two Pages ---
+       // --- Navigation Functionality for Three Pages ---
        navItems.forEach(item => {
            item.addEventListener('click', (e) => {
                e.preventDefault();
@@ -308,6 +367,7 @@
                const sectionId = item.getAttribute('data-section');
                document.getElementById(sectionId).classList.add('active');
                document.getElementById(sectionId).style.display = '';
+               if (sectionId === 'weekly-schedule-section') renderWeeklySchedule();
            });
        });
 
@@ -316,11 +376,19 @@
            localStorage.setItem('medications', JSON.stringify(medications));
        }
 
+       function getTodayMedications() {
+           const today = new Date().getDay();
+           return medications.filter(med => 
+               (med.days?.length ? med.days.includes(today) : true)
+           );
+       }
+
        function renderMedicationList() {
            medicationList.innerHTML = '';
-           medications.sort((a, b) => a.timeInMs - b.timeInMs);
+           const todayMeds = getTodayMedications();
+           todayMeds.sort((a, b) => a.timeInMs - b.timeInMs);
 
-           medications.forEach(med => {
+           todayMeds.forEach(med => {
                const li = document.createElement('li');
                li.className = 'medication-item';
                li.dataset.id = med.id;
@@ -350,12 +418,13 @@
                });
            });
 
-           if (medications.length === 0) {
-               medicationList.innerHTML = '<p>No medications added yet.</p>';
+           if (todayMeds.length === 0) {
+               medicationList.innerHTML = '<p>No medications added yet for today.</p>';
            }
        }
 
-       function deleteMedication(id) {
+       // Expose deleteMedication for inline onclick
+       window.deleteMedication = function(id) {
            if (confirm('Are you sure you want to delete this medication?')) {
                const medIndex = medications.findIndex(med => med.id === parseInt(id));
                if (medIndex !== -1) {
@@ -363,14 +432,20 @@
                    medications.splice(medIndex, 1);
                    saveMedications();
                    renderMedicationList();
+                   renderWeeklySchedule();
                    showNotification(`${deletedMed.name} deleted successfully!`, 'success');
                }
            }
-       }
+       };
 
        function addMedication() {
            if (!medNameInput.value || !medDosageInput.value || !medTimeInput.value) {
                showNotification('Please fill in all fields', 'danger');
+               return;
+           }
+           const days = Array.from(weekdaysGroup.querySelectorAll('input[type="checkbox"]:checked')).map(cb => +cb.value);
+           if (days.length === 0) {
+               showNotification('Please select at least one day of the week', 'danger');
                return;
            }
            const newMed = {
@@ -381,14 +456,17 @@
                status: 'pending',
                timeInMs: convertTimeToMs(medTimeInput.value),
                notified: false,
-               overdueNotified: false
+               overdueNotified: false,
+               days: days
            };
            medications.push(newMed);
            saveMedications();
            medNameInput.value = '';
            medDosageInput.value = '';
            medTimeInput.value = '';
+           weekdaysGroup.querySelectorAll('input[type="checkbox"]').forEach(cb=>cb.checked=false);
            renderMedicationList();
+           renderWeeklySchedule();
            showNotification(`${newMed.name} added successfully!`, 'success');
        }
 
@@ -446,7 +524,7 @@
            const now = new Date();
            const currentTime = now.getHours() * 60 + now.getMinutes();
 
-           medications.forEach(med => {
+           getTodayMedications().forEach(med => {
                if (med.status !== 'taken') {
                    const medTime = Math.floor(med.timeInMs / 60000);
 
@@ -555,6 +633,41 @@
            showNotification('Note saved successfully!', 'success');
        }
 
+       // --- Weekly Schedule Functionality ---
+       function renderWeeklySchedule() {
+           // Days of week: 0=Sun, ..., 6=Sat
+           const dayNames = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+           // Group meds by day
+           const medsByDay = Array.from({length: 7}, (_,i)=>{
+               return medications.filter(med => med.days?.includes(i));
+           });
+
+           // Build table HTML
+           let html = '<tr>';
+           for(let i=0;i<7;i++) {
+               html += `<th>${dayNames[i]}</th>`;
+           }
+           html += '</tr><tr>';
+           for(let i=0;i<7;i++) {
+               html += `<td>`;
+               if(medsByDay[i].length === 0){
+                   html += '<span style="color:#999;">No Meds</span>';
+               } else {
+                   medsByDay[i]
+                   .sort((a, b) => a.timeInMs - b.timeInMs)
+                   .forEach(med => {
+                       html += `<div style="margin-bottom:8px;">
+                           <strong>${med.name}</strong><br>
+                           <span style="font-size:13px;">${med.dosage} · ${formatTime(med.time)}</span>
+                       </div>`;
+                   });
+               }
+               html += `</td>`;
+           }
+           html += '</tr>';
+           scheduleTable.innerHTML = html;
+       }
+
        // --- Notification Display ---
        function showNotification(message, type) {
            notificationArea.textContent = message;
@@ -571,6 +684,8 @@
        // --- Initial Renders ---
        renderMedicationList();
        renderNotesList();
+       // renderWeeklySchedule(); // Don't show until nav
+
    </script>
 </body>
 </html>
