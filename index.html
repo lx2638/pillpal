@@ -395,6 +395,12 @@
 
                const statusLabel = getStatusLabel(med);
 
+               // Highlight overdue medication notifications in red
+               let statusStyle = '';
+               if (statusLabel.class === 'overdue') {
+                   statusStyle = 'background-color: #e74c3c; color: white;';
+               }
+
                li.innerHTML = `
                    <div class="med-info">
                        <div class="med-name">${med.name}</div>
@@ -403,7 +409,7 @@
                        </div>
                    </div>
                    <div>
-                       <span class="med-status ${statusLabel.class}">${statusLabel.text}</span>
+                       <span class="med-status ${statusLabel.class}" style="${statusStyle}">${statusLabel.text}</span>
                        <button class="delete-btn" onclick="deleteMedication(${med.id})">Delete</button>
                    </div>
                `;
